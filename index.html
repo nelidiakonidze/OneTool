@@ -15,14 +15,6 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <!-- <script type="text/javascript">
-      const onloadCallback = function() {
-        grecaptcha.render('captcha', {
-        'sitekey': '6LehC7kUAAAAAPNLi5Guv2RYfYBSvQ0rtG7yfpz8',
-      });
-    };
-    </script> -->
-</script>
     <link
       href="https://fonts.googleapis.com/css?family=Nunito&display=swap"
       rel="stylesheet"
@@ -106,18 +98,20 @@
 
                 $.ajax(settings)
                    .done(function(response) {
+                    if (response === 'OK') {
+                    $('#success').text('Successfully registered');
+                    $('#success').slideDown();
+                  }
+                  setTimeout(function(data){
+                    $('#success').fadeOut('slow');
+                  }, 2000)
                     $('#username').val('');
                     $('#email').val('');
-                  })
-                  
-                //  $('#success').text(
-                //   'Successfully registred')
-                //      $('success').slideDown();
-                
+                  })  
                   .fail(function(error) {
                     $('#error').text(error.responseText);
                     $('#error').slideDown();
-                  });
+                });             
               }
             })
             .fail(function(data) {
