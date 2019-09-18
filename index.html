@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <title>One Tool Form</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- <script type="text/javascript">
+      const onloadCallback = function() {
+        grecaptcha.render('captcha', {
+        'sitekey': '6LehC7kUAAAAAPNLi5Guv2RYfYBSvQ0rtG7yfpz8',
+      });
+    };
+    </script> -->
+</script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Nunito&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <form id="myForm" onsubmit="test(event)">
+        <div class="form-group">
+          <h1>Registration page</h1>
+          <label for="username">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            placeholder="Username"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="Email"
+          />
+        </div>
+        <div class="form-group">
+            <script src="https://www.google.com/recaptcha/api.js?render=explicit"
+            async defer>
+        </script>
+          <div class="alert alert-danger" role="alert" id="error"></div>
+          <div class="alert alert-success" role="alert" id="success"></div>
+          <button type="submit" class="btn btn-outline-success">
+            Register
+          </button>
+          <div class="g-recaptcha" data-sitekey="6Ld6E7kUAAAAAMHEciza5WMmzyYU55CJXcZ1Xegs"></div>
+        </div>
+        </div>
+      </form>
+      <script src='https://www.google.com/recaptcha/api.js'></script>
+      <script>
+        $('#error').hide();
+        $('#success').hide();
+        const test = event => {
+          const val = $('#email').val();
+          const endpoint = 'https://open.kickbox.com/v1/disposable/';
+          //hit the api
+          event.preventDefault();
+          $.ajax({
+            url: endpoint + encodeURIComponent(val),
+          })
+            .done(function(response) {
+              if (response.disposable) {
+                $('#error').text(
+                  'Fake email detected, please enter a valid email',
+                );
+                $('#error').slideDown();
+              } else {
+                const username = $('#username').val();
+                const email = $('#email').val();
+
+                const data = {
+                  username,
+                  email,
+                };
+                const settings = {
+                  async: true,
+                  crossDomain: true,
+                  url: 'http://localhost:4000/register/',
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'cache-control': 'no-cache',
+                    'Access-Control-Allow-Origin': '*',
+                  },
+
+                  processData: false,
+                  data: JSON.stringify(data),
+                };
+
+                $.ajax(settings)
+                   .done(function(response) {
+                    $('#username').val('');
+                    $('#email').val('');
+                  })
+                  
+                //  $('#success').text(
+                //   'Successfully registred')
+                //      $('success').slideDown();
+                
+                  .fail(function(error) {
+                    $('#error').text(error.responseText);
+                    $('#error').slideDown();
+                  });
+              }
+            })
+            .fail(function(data) {
+              console.warn('this is the error', data);
+            });
+          //cancel the submit event
+          event.preventDefault();
+        };
+      </script>
+    </div>
+  </body>
+</html>
